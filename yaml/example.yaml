@@ -1,0 +1,11 @@
+apiVersion: api.practice.com/v1alpha1
+kind: Message
+metadata:
+  name: mymessage
+spec:
+  sender:
+    remote: smtp.qq.com
+    port:  25
+    email: xxx@qq.com
+    password: password
+    targets: xxx1@qq.com, xxx2@qq.com
