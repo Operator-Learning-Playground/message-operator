@@ -15,9 +15,13 @@ func NewDeploymentHandler() *DeploymentHandler {
 }
 
 func (d DeploymentHandler) OnAdd(obj interface{}) {
-
-	dep := obj.(v1.Deployment)
-	GlobalSend.Send(fmt.Sprintf("deplyment already create: %s", dep.GetName()), fmt.Sprintf("deplyment already create: %s", dep.GetName()))
+	//fmt.Println("有走到发送！！")
+	//dep := obj.(*v1.Deployment)
+	//handlerLock.Lock()
+	//defer handlerLock.Unlock()
+	//GlobalSend.Send(fmt.Sprintf("deplyment already create: %s", dep.GetName()),
+	//	fmt.Sprintf("deplyment already create: %s", dep.GetName()))
+	//fmt.Println("发送成功")
 	return
 }
 
@@ -26,6 +30,16 @@ func (d DeploymentHandler) OnUpdate(oldObj, newObj interface{}) {
 }
 
 func (d DeploymentHandler) OnDelete(obj interface{}) {
+
+	dep := obj.(*v1.Deployment)
+	// TODO: 使用初始化实例 可以解决目前的bug
+	s := NewSender()
+	s.Send(fmt.Sprintf("deplyment already delete: %s", dep.GetName()),
+		fmt.Sprintf("deplyment already delete: %s", dep.GetName()))
+	fmt.Println("发送成功")
+
+	// 发送邮件
+
 	return
 }
 

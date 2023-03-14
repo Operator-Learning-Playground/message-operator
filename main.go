@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
 	"github.com/myoperator/messageoperator/pkg/controller"
 	"github.com/myoperator/messageoperator/pkg/informer"
@@ -10,8 +9,6 @@ import (
 	_ "k8s.io/code-generator"
 	"k8s.io/klog/v2"
 	"log"
-
-	"net/http"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -73,15 +70,7 @@ func main() {
 		}
 	}()
 
-	// 6. 启动网关
-	//go func() {
-	//	klog.Info("proxy start!! ")
-	//	http.HandleFunc("/", middleware.ApplyMiddleware(sysconfig.ProxyRequestHandler(sysconfig.ProxyMap), middleware.LoggerMiddleware,
-	//		middleware.IpLimiterMiddleware, middleware.ParamLimiterMiddleware))
-	//	if err = http.ListenAndServe(fmt.Sprintf(":%d", sysconfig.SysConfig1.Server.Port), nil); err != nil {
-	//		errC <-err
-	//	}
-	//}()
+
 
 	// 这里会阻塞，两种常驻进程可以使用这个方法
 	getError := <-errC

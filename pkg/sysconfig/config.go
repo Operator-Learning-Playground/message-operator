@@ -36,11 +36,11 @@ type SysConfig struct {
 }
 
 type Sender struct {
-	Remote   string `json:"remote"`
-	Port     int    `json:"port"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Targets  string `json:"targets"`
+	Remote   string `yaml:"remote"`
+	Port     int    `yaml:"port"`
+	Email    string `yaml:"email"`
+	Password string `yaml:"password"`
+	Targets  string `yaml:"targets"`
 }
 
 type Server struct {

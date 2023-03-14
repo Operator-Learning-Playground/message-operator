@@ -1,6 +1,5 @@
 package send
 
-
 import (
 	"crypto/tls"
 	. "github.com/myoperator/messageoperator/pkg/sysconfig"
@@ -14,7 +13,7 @@ var (
 
 
 func init() {
-	GlobalSend = NewSender()
+	GlobalSend = NewSender() // FIXME: 目前有sender实例无法重复利用的bug
 }
 
 // Sender 邮件发送器
@@ -30,8 +29,19 @@ func (sender *Send) Send(title, content string) {
 	m.SetHeader("Subject", title)
 	m.SetBody("text/plain", content)
 	if err := sender.dialer.DialAndSend(m); err != nil {
+
 		log.Print(err)
 	}
+
+	//d, err := sender.dialer.Dial()
+	//if err != nil {
+	//	fmt.Println("这里报错")
+	//	log.Print(err)
+	//}
+	//t := []string{SysConfig1.Sender.Targets}
+	//d.Send(SysConfig1.Sender.Email, t, io.WriteString())
+
+
 }
 
 // NewSender 创建邮件发送器
