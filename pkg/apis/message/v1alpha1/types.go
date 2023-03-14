@@ -23,11 +23,11 @@ type MessageSpec struct {
 }
 
 type Sender struct {
-	remote   string	 `json:"remote"`
-	port     int     `json:"port"`
-	email    string  `json:"email"`
-	password string  `json:"password"`
-	targets  string  `json:"targets"`
+	Remote   string `json:"remote"`
+	Port     int    `json:"port"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Targets  string `json:"targets"`
 }
 
 

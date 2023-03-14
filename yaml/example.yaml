@@ -6,6 +6,6 @@ spec:
   sender:
     remote: smtp.qq.com
     port:  25
-    email: xxx@qq.com
+    email: 2539512760@qq.com
     password: password
-    targets: xxx1@qq.com, xxx2@qq.com
+    targets: 3467320690@qq.com
