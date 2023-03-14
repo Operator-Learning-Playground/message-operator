@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
 	"github.com/myoperator/messageoperator/pkg/sysconfig"
 	"k8s.io/klog/v2"
@@ -26,7 +25,7 @@ func NewMessageController() *MessageController {
 
 // Reconcile 调协loop
 func (r *MessageController) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
-	fmt.Println("有进来吗！！")
+
 	message := &messagev1alpha1.Message{}
 	err := r.Get(ctx, req.NamespacedName, message)
 	if err != nil {

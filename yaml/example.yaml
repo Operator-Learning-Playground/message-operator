@@ -7,5 +7,5 @@ spec:
     remote: smtp.qq.com
     port:  25
     email: 2539512760@qq.com
-    password: password
+    password: cswkxalurhtwecge
     targets: 3467320690@qq.com
