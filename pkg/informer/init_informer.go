@@ -5,6 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/klog/v2"
 	"log"
 )
 
@@ -44,6 +45,8 @@ func (k *K8sConfig) InitInformerFactory() informers.SharedInformerFactory {
 	serviceInformer.Informer().AddEventHandler(svcHandler)
 
 	fact.Start(wait.NeverStop)
+	klog.Info("informer start !!")
+
 
 	return fact
 }

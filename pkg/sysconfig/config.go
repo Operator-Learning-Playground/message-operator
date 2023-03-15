@@ -48,6 +48,7 @@ type Server struct {
 	Port   int 	  `yaml:"port"`
 }
 
+// AppConfig 刷新配置文件
 func AppConfig(message *messagev1alpha1.Message) error {
 
 	SysConfig1.Sender.Remote = message.Spec.Sender.Remote
