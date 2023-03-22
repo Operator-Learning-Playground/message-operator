@@ -33,3 +33,17 @@ spec:
         - name: app
           hostPath:
             path: /root/messageoperator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mymessage-svc
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+    - port: 8888
+      nodePort: 31130
+  selector:
+    app: mymessage-controller
+---

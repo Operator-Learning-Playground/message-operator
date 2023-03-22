@@ -3,6 +3,7 @@ package main
 import (
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
 	"github.com/myoperator/messageoperator/pkg/controller"
+	"github.com/myoperator/messageoperator/pkg/httpserver"
 	"github.com/myoperator/messageoperator/pkg/informer"
 	"github.com/myoperator/messageoperator/pkg/k8sconfig"
 	"github.com/myoperator/messageoperator/pkg/sysconfig"
@@ -68,6 +69,14 @@ func main() {
 		if err = mgr.Start(signals.SetupSignalHandler()); err != nil {
 			errC <-err
 		}
+	}()
+
+	// 6 启动httpServer
+	go func() {
+		if err = httpserver.HttpServer(); err != nil {
+			errC <-err
+		}
+
 	}()
 
 

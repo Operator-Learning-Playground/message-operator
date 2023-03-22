@@ -23,13 +23,13 @@ type Send struct {
 
 // Send 发送邮件
 func (sender *Send) Send(title, content string) {
+	// TODO: 需要抛出错误
 	m := mail.NewMessage()
 	m.SetHeader("From", SysConfig1.Sender.Email)
 	m.SetHeader("To", SysConfig1.Sender.Targets)
 	m.SetHeader("Subject", title)
 	m.SetBody("text/plain", content)
 	if err := sender.dialer.DialAndSend(m); err != nil {
-
 		log.Print(err)
 	}
 
