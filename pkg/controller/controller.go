@@ -9,14 +9,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-const (
-	ProxyControllerAnnotation = "myproxy"
-	ingressAnnotationKey = "kubernetes.io/ingress.class"
-)
 
 type MessageController struct {
 	client.Client
-
 }
 
 func NewMessageController() *MessageController {
@@ -42,10 +37,9 @@ func (r *MessageController) Reconcile(ctx context.Context, req reconcile.Request
 }
 
 // InjectClient 使用controller-runtime 需要注入的client
-func(r *MessageController) InjectClient(c client.Client) error {
+func (r *MessageController) InjectClient(c client.Client) error {
 	r.Client = c
 	return nil
 }
 
 // TODO: 删除逻辑并未处理
-

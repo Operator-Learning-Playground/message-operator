@@ -8,9 +8,8 @@ import (
 )
 
 var (
-	GlobalSend  *Send
+	GlobalSend *Send
 )
-
 
 func init() {
 	GlobalSend = NewSender() // FIXME: 目前有sender实例无法重复利用的bug
@@ -40,7 +39,6 @@ func (sender *Send) Send(title, content string) {
 	//}
 	//t := []string{SysConfig1.Sender.Targets}
 	//d.Send(SysConfig1.Sender.Email, t, io.WriteString())
-
 
 }
 

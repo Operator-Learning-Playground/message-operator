@@ -7,8 +7,8 @@ import (
 )
 
 type SendRequest struct {
-	Title 	string	`json:"title"`
-	Content string  `json:"content"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
 }
 
 // SendTo send interface
@@ -25,4 +25,3 @@ func SendTo(c *gin.Context) {
 	return
 
 }
-

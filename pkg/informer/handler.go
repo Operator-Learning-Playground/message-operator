@@ -12,7 +12,7 @@ import (
 // TODO: 这里可以改成 annotation来过滤，不要所有的资源都发送消息
 
 const (
-	MessageAnnotationKey = "message"
+	MessageAnnotationKey   = "message"
 	MessageAnnotationValue = "api.practice.com/send"
 )
 
@@ -59,7 +59,6 @@ func (d DeploymentHandler) OnDelete(obj interface{}) {
 	s.Send(fmt.Sprintf("deplyment is deleted: %s", dep.GetName()),
 		fmt.Sprintf("deplyment is deleted: %s", dep.GetName()))
 	klog.Info("发送成功")
-
 
 	return
 }

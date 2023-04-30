@@ -16,7 +16,6 @@ func NewK8sConfig() *K8sConfig {
 	return &K8sConfig{}
 }
 
-
 func (k *K8sConfig) InitClient() kubernetes.Interface {
 
 	client, err := kubernetes.NewForConfig(k8sconfig.K8sRestConfig())
@@ -26,7 +25,6 @@ func (k *K8sConfig) InitClient() kubernetes.Interface {
 
 	return client
 }
-
 
 func (k *K8sConfig) InitInformerFactory() informers.SharedInformerFactory {
 
@@ -46,7 +44,6 @@ func (k *K8sConfig) InitInformerFactory() informers.SharedInformerFactory {
 
 	fact.Start(wait.NeverStop)
 	klog.Info("informer start !!")
-
 
 	return fact
 }

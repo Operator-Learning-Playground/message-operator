@@ -8,8 +8,6 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-
-
 var SysConfig1 = new(SysConfig)
 
 func InitConfig() error {
@@ -19,20 +17,18 @@ func InitConfig() error {
 		return err
 	}
 
-
 	err = yaml.Unmarshal(config, SysConfig1)
 	if err != nil {
 		return err
 	}
-
 
 	return nil
 
 }
 
 type SysConfig struct {
-	Sender Sender  `yaml:"sender"`
-	Server Server  `yaml:"server"`
+	Sender Sender `yaml:"sender"`
+	Server Server `yaml:"server"`
 }
 
 type Sender struct {
@@ -44,8 +40,8 @@ type Sender struct {
 }
 
 type Server struct {
-	Ip     string `yaml:"ip"`
-	Port   int 	  `yaml:"port"`
+	Ip   string `yaml:"ip"`
+	Port int    `yaml:"port"`
 }
 
 // AppConfig 刷新配置文件

@@ -25,4 +25,3 @@ func register(router *gin.Engine) {
 
 	}
 }
-
