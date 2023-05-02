@@ -10,6 +10,7 @@ import (
 )
 
 // TODO: 这里可以改成 annotation来过滤，不要所有的资源都发送消息
+// TODO: 配置不同资源的email通知
 
 const (
 	MessageAnnotationKey   = "message"
@@ -38,9 +39,13 @@ func (d DeploymentHandler) OnUpdate(oldObj, newObj interface{}) {
 	// TODO: 使用初始化实例 可以解决目前的bug
 	// 发送邮件
 	s := NewSender()
-	s.Send(fmt.Sprintf("deplyment is updated: %s", dep.GetName()),
+	err := s.Send(fmt.Sprintf("deplyment is updated: %s", dep.GetName()),
 		fmt.Sprintf("deplyment is updated: %s", dep.GetName()))
-	klog.Info("发送成功")
+	if err != nil {
+		klog.Error("send deployment update error: ", err)
+		return
+	}
+	klog.Info("send deployment update success...")
 
 	return
 }
@@ -56,9 +61,13 @@ func (d DeploymentHandler) OnDelete(obj interface{}) {
 	// TODO: 使用初始化实例 可以解决目前的bug
 	// 发送邮件
 	s := NewSender()
-	s.Send(fmt.Sprintf("deplyment is deleted: %s", dep.GetName()),
+	err := s.Send(fmt.Sprintf("deplyment is deleted: %s", dep.GetName()),
 		fmt.Sprintf("deplyment is deleted: %s", dep.GetName()))
-	klog.Info("发送成功")
+	if err != nil {
+		klog.Error("send deployment delete error: ", err)
+		return
+	}
+	klog.Info("send deployment delete success...")
 
 	return
 }
@@ -86,10 +95,13 @@ func (p PodHandler) OnUpdate(oldObj, newObj interface{}) {
 	// TODO: 使用初始化实例 可以解决目前的bug
 	// 发送邮件
 	s := NewSender()
-	s.Send(fmt.Sprintf("pod is updated: %s", pod.GetName()),
+	err := s.Send(fmt.Sprintf("pod is updated: %s", pod.GetName()),
 		fmt.Sprintf("pod is updated: %s", pod.GetName()))
-
-	klog.Info("发送成功")
+	if err != nil {
+		klog.Error("send pod update error: ", err)
+		return
+	}
+	klog.Info("send pod update success...")
 	return
 }
 
@@ -103,9 +115,13 @@ func (p PodHandler) OnDelete(obj interface{}) {
 	// TODO: 使用初始化实例 可以解决目前的bug
 	// 发送邮件
 	s := NewSender()
-	s.Send(fmt.Sprintf("pod is deleted: %s", pod.GetName()),
+	err := s.Send(fmt.Sprintf("pod is deleted: %s", pod.GetName()),
 		fmt.Sprintf("pod is deleted: %s", pod.GetName()))
-	klog.Info("发送成功")
+	if err != nil {
+		klog.Error("send pod delete error: ", err)
+		return
+	}
+	klog.Info("send pod delete success...")
 
 	return
 }
@@ -133,9 +149,13 @@ func (s ServiceHandler) OnUpdate(oldObj, newObj interface{}) {
 	// TODO: 使用初始化实例 可以解决目前的bug
 	// 发送邮件
 	ss := NewSender()
-	ss.Send(fmt.Sprintf("service is updated: %s", svc.GetName()),
+	err := ss.Send(fmt.Sprintf("service is updated: %s", svc.GetName()),
 		fmt.Sprintf("service is updated: %s", svc.GetName()))
-	klog.Info("发送成功")
+	if err != nil {
+		klog.Error("send service update error: ", err)
+		return
+	}
+	klog.Info("send service update success...")
 
 	return
 }
@@ -150,9 +170,13 @@ func (s ServiceHandler) OnDelete(obj interface{}) {
 	// TODO: 使用初始化实例 可以解决目前的bug
 	// 发送邮件
 	ss := NewSender()
-	ss.Send(fmt.Sprintf("service is deleted: %s", svc.GetName()),
+	err := ss.Send(fmt.Sprintf("service is deleted: %s", svc.GetName()),
 		fmt.Sprintf("service is deleted: %s", svc.GetName()))
-	klog.Info("发送成功")
+	if err != nil {
+		klog.Error("send service delete error: ", err)
+		return
+	}
+	klog.Info("send service delete success...")
 
 	return
 }

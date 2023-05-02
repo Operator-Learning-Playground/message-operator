@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
+	"github.com/myoperator/messageoperator/pkg/common"
 	"github.com/myoperator/messageoperator/pkg/controller"
 	"github.com/myoperator/messageoperator/pkg/httpserver"
 	"github.com/myoperator/messageoperator/pkg/informer"
@@ -32,6 +34,7 @@ func main() {
 	mgr, err := manager.New(k8sconfig.K8sRestConfig(), manager.Options{
 		Logger: logf.Log.WithName("message-operator"),
 	})
+	fmt.Println(common.GetWd())
 	if err != nil {
 		mgr.GetLogger().Error(err, "unable to set up manager")
 		os.Exit(1)
@@ -56,7 +59,7 @@ func main() {
 
 	// 4. 载入业务配置
 	if err = sysconfig.InitConfig(); err != nil {
-		klog.Error(err, "unable to load sysconfig")
+		klog.Error("unable to load sysconfig error: ", err)
 		os.Exit(1)
 	}
 	errC := make(chan error)

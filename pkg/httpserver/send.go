@@ -11,7 +11,7 @@ type SendRequest struct {
 	Content string `json:"content"`
 }
 
-// SendTo send interface
+// SendTo 发送信息逻辑
 func SendTo(c *gin.Context) {
 	var r *SendRequest
 	if err := c.ShouldBindJSON(&r); err != nil {
@@ -20,7 +20,11 @@ func SendTo(c *gin.Context) {
 		return
 	}
 	s := NewSender()
-	s.Send(r.Title, r.Content)
+	err := s.Send(r.Title, r.Content)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
 	c.JSON(200, gin.H{"ok": "ok"})
 	return
 

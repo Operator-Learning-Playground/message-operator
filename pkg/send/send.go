@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	. "github.com/myoperator/messageoperator/pkg/sysconfig"
 	"gopkg.in/mail.v2"
-	"log"
+	"k8s.io/klog/v2"
 )
 
 var (
@@ -21,7 +21,7 @@ type Send struct {
 }
 
 // Send 发送邮件
-func (sender *Send) Send(title, content string) {
+func (sender *Send) Send(title, content string) error {
 	// TODO: 需要抛出错误
 	m := mail.NewMessage()
 	m.SetHeader("From", SysConfig1.Sender.Email)
@@ -29,8 +29,11 @@ func (sender *Send) Send(title, content string) {
 	m.SetHeader("Subject", title)
 	m.SetBody("text/plain", content)
 	if err := sender.dialer.DialAndSend(m); err != nil {
-		log.Print(err)
+		klog.Error("send err: ", err)
+		return err
 	}
+	klog.Info("send email.....")
+	return nil
 
 	//d, err := sender.dialer.Dial()
 	//if err != nil {

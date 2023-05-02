@@ -9,8 +9,7 @@ import (
 	"log"
 )
 
-type K8sConfig struct {
-}
+type K8sConfig struct{}
 
 func NewK8sConfig() *K8sConfig {
 	return &K8sConfig{}
@@ -26,6 +25,7 @@ func (k *K8sConfig) InitClient() kubernetes.Interface {
 	return client
 }
 
+// InitInformerFactory 初始化informer对象
 func (k *K8sConfig) InitInformerFactory() informers.SharedInformerFactory {
 
 	depHandler := NewDeploymentHandler()
