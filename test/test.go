@@ -9,7 +9,6 @@ import (
 	"os"
 )
 
-
 // 测试邮件发送功能
 func main() {
 
@@ -24,7 +23,6 @@ func main() {
 	s.Send("再一次测试", "再一次测试")
 
 }
-
 
 // Sender 邮件发送器
 type Send struct {
@@ -52,4 +50,3 @@ func NewSender() *Send {
 		dialer: d,
 	}
 }
-

@@ -20,9 +20,8 @@ func register(router *gin.Engine) {
 
 	r := router.Group("/v1")
 	{
-		//
+		// 对外发送email通知
 		r.POST("/send", SendTo)
 
 	}
 }
-

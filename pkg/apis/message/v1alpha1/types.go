@@ -16,10 +16,8 @@ type Message struct {
 	Spec MessageSpec `json:"spec,omitempty"`
 }
 
-
-
 type MessageSpec struct {
-	Sender  Sender   `json:"sender"`
+	Sender Sender `json:"sender"`
 }
 
 type Sender struct {
@@ -29,7 +27,6 @@ type Sender struct {
 	Password string `json:"password"`
 	Targets  string `json:"targets"`
 }
-
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -41,5 +38,3 @@ type MessageList struct {
 
 	Items []Message `json:"items"`
 }
-
-
