@@ -14,10 +14,16 @@ type Message struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec MessageSpec `json:"spec,omitempty"`
+
+	Status MessageStatus `json:"status,omitempty"`
 }
 
 type MessageSpec struct {
 	Sender Sender `json:"sender"`
+}
+
+type MessageStatus struct {
+	Generation int64 `json:"generation"`
 }
 
 type Sender struct {

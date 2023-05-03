@@ -1,6 +1,7 @@
 package sysconfig
 
 import (
+	"fmt"
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
 	"github.com/myoperator/messageoperator/pkg/common"
 	"io/ioutil"
@@ -49,6 +50,15 @@ type Server struct {
 // AppConfig 刷新配置文件
 func AppConfig(message *messagev1alpha1.Message) error {
 
+	// 如果status的版本为0，直接赋值，如果两个版本号相同，代表进入的是不需要调协的状态，直接返回
+	if message.Status.Generation == 0 {
+		fmt.Println("aaa")
+		message.Status.Generation = message.Generation
+	} else if message.Status.Generation == message.Generation {
+		fmt.Println("bbb")
+		return nil
+	}
+
 	SysConfig1.Sender.Remote = message.Spec.Sender.Remote
 	SysConfig1.Sender.Email = message.Spec.Sender.Email
 	SysConfig1.Sender.Targets = message.Spec.Sender.Targets
@@ -61,6 +71,10 @@ func AppConfig(message *messagev1alpha1.Message) error {
 		klog.Error("saveConfigToFile error: ", err)
 		return err
 	}
+
+	// 最后要赋值
+	fmt.Println("ccc")
+	message.Status.Generation = message.Generation
 
 	return ReloadConfig()
 }

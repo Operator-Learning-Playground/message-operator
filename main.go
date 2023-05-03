@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
-	"github.com/myoperator/messageoperator/pkg/common"
 	"github.com/myoperator/messageoperator/pkg/controller"
 	"github.com/myoperator/messageoperator/pkg/httpserver"
 	"github.com/myoperator/messageoperator/pkg/informer"
 	"github.com/myoperator/messageoperator/pkg/k8sconfig"
 	"github.com/myoperator/messageoperator/pkg/sysconfig"
+	//corev1 "k8s.io/api/core/v1"
+	//"k8s.io/client-go/tools/record"
 	_ "k8s.io/code-generator"
 	"k8s.io/klog/v2"
 	"log"
@@ -18,6 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
+	"time"
 )
 
 /*
@@ -30,11 +31,13 @@ import (
 func main() {
 
 	logf.SetLogger(zap.New())
+	var d time.Duration = 0
 	// 1. 管理器初始化
 	mgr, err := manager.New(k8sconfig.K8sRestConfig(), manager.Options{
-		Logger: logf.Log.WithName("message-operator"),
+		Logger:     logf.Log.WithName("message-operator"),
+		SyncPeriod: &d,
 	})
-	fmt.Println(common.GetWd())
+
 	if err != nil {
 		mgr.GetLogger().Error(err, "unable to set up manager")
 		os.Exit(1)
@@ -51,7 +54,7 @@ func main() {
 	_ = k8sConfig.InitInformerFactory()
 
 	// 3. 控制器相关
-	messageCtl := controller.NewMessageController()
+	messageCtl := controller.NewMessageController(mgr.GetEventRecorderFor("message-operator"))
 
 	err = builder.ControllerManagedBy(mgr).
 		For(&messagev1alpha1.Message{}).
