@@ -10,21 +10,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/recorder"
-)
-
-var (
-	recorderProvider recorder.Provider
 )
 
 type MessageController struct {
 	client.Client
-	EventRecord record.EventRecorder
+	EventRecorder record.EventRecorder // 事件管理器
 }
 
-func NewMessageController() *MessageController {
-	r := recorderProvider.GetEventRecorderFor("message-operator")
-	return &MessageController{EventRecord: r}
+func NewMessageController(eventRecorder record.EventRecorder) *MessageController {
+	return &MessageController{EventRecorder: eventRecorder}
 }
 
 // Reconcile 调协loop
@@ -52,17 +46,17 @@ func (r *MessageController) Reconcile(ctx context.Context, req reconcile.Request
 		err = sysconfig.AppConfig(message)
 		if err != nil {
 			klog.Error("appconfig error: ", err)
-			r.EventRecord.Event(message, corev1.EventTypeWarning, "UpdateFail", "appconfig update fail...")
+			r.EventRecorder.Event(message, corev1.EventTypeWarning, "UpdateFailed", "update app config fail...")
 			return err
 		}
-		// 加入事件
-		r.EventRecord.Event(message, corev1.EventTypeNormal, "Update", "appconfig update...")
+		r.EventRecorder.Event(message, corev1.EventTypeNormal, "Update", "update app config...")
 		return nil
 	})
 	if err != nil {
-		klog.Error("reconcile error: ", err)
+		klog.Error("appconfig error: ", err)
 		return reconcile.Result{}, err
 	}
+
 	klog.Info("CreateOrUpdate ", "Message ", mutateMessageRes)
 	return reconcile.Result{}, nil
 }
