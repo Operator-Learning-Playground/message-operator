@@ -22,6 +22,5 @@ func register(router *gin.Engine) {
 	{
 		// 对外发送email通知
 		r.POST("/send", SendTo)
-
 	}
 }

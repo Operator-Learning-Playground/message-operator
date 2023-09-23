@@ -27,5 +27,4 @@ func SendTo(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"ok": "ok"})
 	return
-
 }

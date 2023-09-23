@@ -35,7 +35,7 @@ func main() {
 	// 1. 管理器初始化
 	mgr, err := manager.New(k8sconfig.K8sRestConfig(), manager.Options{
 		Logger:     logf.Log.WithName("message-operator"),
-		SyncPeriod: &d,
+		SyncPeriod: &d, // resync不设置触发
 	})
 
 	if err != nil {

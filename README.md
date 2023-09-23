@@ -8,3 +8,22 @@
 1. 支持消息人配置的热加载、热更新等功能。
 2. 实现deployment、pod与service变更与删除后的消息通知。
 3. 提供qq邮箱的发送功能。
+
+- 自定义资源如下所示
+```yaml
+apiVersion: api.practice.com/v1alpha1
+kind: Message
+metadata:
+  name: mymessage
+spec:
+  sender: 
+    # 发送配置
+    remote: smtp.qq.com
+    port:  25
+    # 寄件人邮箱
+    email: 2539512760@qq.com
+    # 寄件人邮箱密码
+    password: cswkxalurhtwecge
+    # 收件人邮箱
+    targets: 3467320690@qq.com
+```
