@@ -31,10 +31,18 @@ func InitConfig() error {
 
 type SysConfig struct {
 	Sender Sender `yaml:"sender"`
+	Feishu Feishu `yaml:"feishu"`
 	Server Server `yaml:"server"`
 }
 
+type Feishu struct {
+	Open    bool   `yaml:"open"`
+	Webhook string `yaml:"webhook"`
+	Type    string `yaml:"type"`
+}
+
 type Sender struct {
+	Open     bool   `yaml:"open"`
 	Remote   string `yaml:"remote"`
 	Port     int    `yaml:"port"`
 	Email    string `yaml:"email"`
@@ -50,21 +58,24 @@ type Server struct {
 // AppConfig 刷新配置文件
 func AppConfig(message *messagev1alpha1.Message) error {
 
-	// 如果status的版本为0，直接赋值，如果两个版本号相同，代表进入的是不需要调协的状态，直接返回
-	if message.Status.Generation == 0 {
-		fmt.Println("aaa")
-		message.Status.Generation = message.Generation
-	} else if message.Status.Generation == message.Generation {
-		fmt.Println("bbb")
-		return nil
-	}
-
+	//// 如果status的版本为0，直接赋值，如果两个版本号相同，代表进入的是不需要调协的状态，直接返回
+	//if message.Status.Generation == 0 {
+	//	message.Status.Generation = message.Generation
+	//} else if message.Status.Generation == message.Generation {
+	//	return nil
+	//}
+	fmt.Println("aaaa")
+	fmt.Println(message.Spec)
 	SysConfig1.Sender.Remote = message.Spec.Sender.Remote
 	SysConfig1.Sender.Email = message.Spec.Sender.Email
 	SysConfig1.Sender.Targets = message.Spec.Sender.Targets
 	SysConfig1.Sender.Port = message.Spec.Sender.Port
 	SysConfig1.Sender.Password = message.Spec.Sender.Password
-	klog.Info("update system config success...")
+	SysConfig1.Sender.Open = message.Spec.Sender.Open
+
+	SysConfig1.Feishu.Type = message.Spec.Feishu.Type
+	SysConfig1.Feishu.Webhook = message.Spec.Feishu.Webhook
+	SysConfig1.Feishu.Open = message.Spec.Feishu.Open
 
 	// 保存配置文件
 	if err := saveConfigToFile(); err != nil {
@@ -73,7 +84,6 @@ func AppConfig(message *messagev1alpha1.Message) error {
 	}
 
 	// 最后要赋值
-	fmt.Println("ccc")
 	message.Status.Generation = message.Generation
 
 	return ReloadConfig()

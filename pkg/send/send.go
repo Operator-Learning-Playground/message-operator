@@ -22,6 +22,11 @@ type Send struct {
 
 // Send 发送邮件
 func (sender *Send) Send(title, content string) error {
+	if !SysConfig1.Sender.Open {
+		klog.Info("config no support email sending")
+		return nil
+	}
+
 	// TODO: 需要抛出错误
 	m := mail.NewMessage()
 	m.SetHeader("From", SysConfig1.Sender.Email)
@@ -34,15 +39,6 @@ func (sender *Send) Send(title, content string) error {
 	}
 	klog.Info("send email.....")
 	return nil
-
-	//d, err := sender.dialer.Dial()
-	//if err != nil {
-	//	fmt.Println("这里报错")
-	//	log.Print(err)
-	//}
-	//t := []string{SysConfig1.Sender.Targets}
-	//d.Send(SysConfig1.Sender.Email, t, io.WriteString())
-
 }
 
 // NewSender 创建邮件发送器

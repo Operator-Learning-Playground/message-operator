@@ -11,31 +11,28 @@ import (
 	//"k8s.io/client-go/tools/record"
 	_ "k8s.io/code-generator"
 	"k8s.io/klog/v2"
-	"log"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
-	"time"
 )
 
 /*
 	manager 主要用来管理Controller Admission Webhook 包括：
 	访问资源对象的client cache scheme 并提供依赖注入机制 优雅关闭机制
-
 	operator = crd + controller + webhook
 */
 
 func main() {
 
 	logf.SetLogger(zap.New())
-	var d time.Duration = 0
+	//var d time.Duration = 0
 	// 1. 管理器初始化
 	mgr, err := manager.New(k8sconfig.K8sRestConfig(), manager.Options{
-		Logger:     logf.Log.WithName("message-operator"),
-		SyncPeriod: &d, // resync不设置触发
+		Logger: logf.Log.WithName("message-operator"),
+		//SyncPeriod: &d, // resync不设置触发
 	})
 
 	if err != nil {
@@ -51,7 +48,7 @@ func main() {
 	}
 
 	k8sConfig := informer.NewK8sConfig()
-	_ = k8sConfig.InitInformerFactory()
+	k8sConfig.InitInformerFactory()
 
 	// 3. 控制器相关
 	messageCtl := controller.NewMessageController(mgr.GetEventRecorderFor("message-operator"))
@@ -65,6 +62,7 @@ func main() {
 		klog.Error("unable to load sysconfig error: ", err)
 		os.Exit(1)
 	}
+
 	errC := make(chan error)
 
 	// 5. 启动controller管理器
@@ -81,11 +79,10 @@ func main() {
 		if err = httpserver.HttpServer(); err != nil {
 			errC <- err
 		}
-
 	}()
 
-	// 这里会阻塞，两种常驻进程可以使用这个方法
+	// 阻塞
 	getError := <-errC
-	log.Println(getError.Error())
+	klog.Error(getError.Error())
 
 }

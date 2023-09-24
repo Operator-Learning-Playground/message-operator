@@ -8,7 +8,6 @@ import (
 	"k8s.io/client-go/tools/record"
 	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
@@ -42,22 +41,19 @@ func (r *MessageController) Reconcile(ctx context.Context, req reconcile.Request
 		return reconcile.Result{}, nil
 	}
 
-	mutateMessageRes, err := controllerutil.CreateOrUpdate(ctx, r.Client, message, func() error {
-		err = sysconfig.AppConfig(message)
-		if err != nil {
-			klog.Error("appconfig error: ", err)
-			r.EventRecorder.Event(message, corev1.EventTypeWarning, "UpdateFailed", "update app config fail...")
-			return err
-		}
-		r.EventRecorder.Event(message, corev1.EventTypeNormal, "Update", "update app config...")
-		return nil
-	})
+	err = sysconfig.AppConfig(message)
+	if err != nil {
+		klog.Error("appconfig error: ", err)
+		r.EventRecorder.Event(message, corev1.EventTypeWarning, "UpdateFailed", "update app config fail...")
+		return reconcile.Result{}, nil
+	}
+	r.EventRecorder.Event(message, corev1.EventTypeNormal, "Update", "update app config...")
+
 	if err != nil {
 		klog.Error("appconfig error: ", err)
 		return reconcile.Result{}, err
 	}
-
-	klog.Info("CreateOrUpdate ", "Message ", mutateMessageRes)
+	klog.Info("CreateOrUpdate ", "Message: ", message.Name, "/", message.Namespace)
 	return reconcile.Result{}, nil
 }
 
@@ -66,5 +62,3 @@ func (r *MessageController) InjectClient(c client.Client) error {
 	r.Client = c
 	return nil
 }
-
-// TODO: 删除逻辑并未处理
