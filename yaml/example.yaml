@@ -9,3 +9,7 @@ spec:
     email: 2539512760@qq.com
     password: cswkxalurhtwecge
     targets: 3467320690@qq.com
+  feishu:
+    webhook: xxxxxx  # 飞书 webhook ip
+    type: card   # 支持 text card 推送模式
+

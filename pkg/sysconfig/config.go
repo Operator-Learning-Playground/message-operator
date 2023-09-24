@@ -1,7 +1,6 @@
 package sysconfig
 
 import (
-	"fmt"
 	messagev1alpha1 "github.com/myoperator/messageoperator/pkg/apis/message/v1alpha1"
 	"github.com/myoperator/messageoperator/pkg/common"
 	"io/ioutil"
@@ -31,7 +30,13 @@ func InitConfig() error {
 
 type SysConfig struct {
 	Sender Sender `yaml:"sender"`
+	Feishu Feishu `json:"feishu"`
 	Server Server `yaml:"server"`
+}
+
+type Feishu struct {
+	Webhook string `json:"webhook"`
+	Type    string `json:"type"`
 }
 
 type Sender struct {
@@ -52,10 +57,8 @@ func AppConfig(message *messagev1alpha1.Message) error {
 
 	// 如果status的版本为0，直接赋值，如果两个版本号相同，代表进入的是不需要调协的状态，直接返回
 	if message.Status.Generation == 0 {
-		fmt.Println("aaa")
 		message.Status.Generation = message.Generation
 	} else if message.Status.Generation == message.Generation {
-		fmt.Println("bbb")
 		return nil
 	}
 
@@ -64,7 +67,7 @@ func AppConfig(message *messagev1alpha1.Message) error {
 	SysConfig1.Sender.Targets = message.Spec.Sender.Targets
 	SysConfig1.Sender.Port = message.Spec.Sender.Port
 	SysConfig1.Sender.Password = message.Spec.Sender.Password
-	klog.Info("update system config success...")
+	//klog.Info("update system config success...")
 
 	// 保存配置文件
 	if err := saveConfigToFile(); err != nil {
@@ -73,7 +76,6 @@ func AppConfig(message *messagev1alpha1.Message) error {
 	}
 
 	// 最后要赋值
-	fmt.Println("ccc")
 	message.Status.Generation = message.Generation
 
 	return ReloadConfig()

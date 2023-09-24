@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	webhookURL := "https://open.feishu.cn/open-apis/bot/v2/hook/xxxx" // 替换为您的飞书机器人 Webhook URL
+	webhookURL := "https://open.feishu.cn/open-apis/bot/v2/hook/919c368d-bbbf-4858-b788-0b78a4389d45" // 替换为您的飞书机器人 Webhook URL
 
 	// 构建卡片消息内容
 	cardMessage := map[string]interface{}{
@@ -27,7 +27,7 @@ func main() {
 			"elements": []interface{}{
 				map[string]interface{}{
 					"tag":     "markdown",
-					"content": "集群内有资源发生变动事件，资源[]，事件[]，如有疑问请尽快处理。\n<at id=all></at>",
+					"content": fmt.Sprintf("集群内有资源发生变动事件，资源[%s]，事件[%s]，如有疑问请尽快处理。\n<at id=all></at>", "deployment", "add"),
 				},
 				map[string]interface{}{
 					"tag": "action",

@@ -20,6 +20,7 @@ type Message struct {
 
 type MessageSpec struct {
 	Sender Sender `json:"sender"`
+	Feishu Feishu `json:"feishu"`
 }
 
 type MessageStatus struct {
@@ -32,6 +33,11 @@ type Sender struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Targets  string `json:"targets"`
+}
+
+type Feishu struct {
+	Webhook string `json:"webhook"`
+	Type    string `json:"type"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

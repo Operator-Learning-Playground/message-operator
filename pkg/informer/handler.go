@@ -1,12 +1,11 @@
 package informer
 
 import (
-	"fmt"
-	. "github.com/myoperator/messageoperator/pkg/send"
+	"github.com/myoperator/messageoperator/pkg/workqueue"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 )
 
 // TODO: 这里可以改成 annotation来过滤，不要所有的资源都发送消息
@@ -18,10 +17,12 @@ const (
 )
 
 type DeploymentHandler struct {
+	// Queue 工作队列接口
+	workqueue.Queue
 }
 
-func NewDeploymentHandler() *DeploymentHandler {
-	return &DeploymentHandler{}
+func NewDeploymentHandler(q workqueue.Queue) *DeploymentHandler {
+	return &DeploymentHandler{Queue: q}
 }
 
 func (d DeploymentHandler) OnAdd(obj interface{}) {
@@ -36,16 +37,30 @@ func (d DeploymentHandler) OnUpdate(oldObj, newObj interface{}) {
 	if !ok {
 		return
 	}
-	// TODO: 使用初始化实例 可以解决目前的bug
-	// 发送邮件
-	s := NewSender()
-	err := s.Send(fmt.Sprintf("deplyment is updated: %s", dep.GetName()),
-		fmt.Sprintf("deplyment is updated: %s", dep.GetName()))
-	if err != nil {
-		klog.Error("send deployment update error: ", err)
+
+	obj, ok := newObj.(runtime.Object)
+	if !ok {
 		return
 	}
-	klog.Info("send deployment update success...")
+	rr := &workqueue.QueueResource{
+		Object:    obj,
+		Name:      dep.GetName(),
+		Namespace: dep.GetNamespace(),
+		Kind:      "Deployment",
+		EventType: workqueue.UpdateEvent,
+	}
+	d.Push(rr)
+
+	//// TODO: 使用初始化实例 可以解决目前的bug
+	//// 发送邮件
+	//s := NewSender()
+	//err := s.Send(fmt.Sprintf("deplyment is updated: %s", dep.GetName()),
+	//	fmt.Sprintf("deplyment is updated: %s", dep.GetName()))
+	//if err != nil {
+	//	klog.Error("send deployment update error: ", err)
+	//	return
+	//}
+	//klog.Info("send deployment update success...")
 
 	return
 }
@@ -58,16 +73,18 @@ func (d DeploymentHandler) OnDelete(obj interface{}) {
 	if !ok {
 		return
 	}
-	// TODO: 使用初始化实例 可以解决目前的bug
-	// 发送邮件
-	s := NewSender()
-	err := s.Send(fmt.Sprintf("deplyment is deleted: %s", dep.GetName()),
-		fmt.Sprintf("deplyment is deleted: %s", dep.GetName()))
-	if err != nil {
-		klog.Error("send deployment delete error: ", err)
+	objj, ok := obj.(runtime.Object)
+	if !ok {
 		return
 	}
-	klog.Info("send deployment delete success...")
+	rr := &workqueue.QueueResource{
+		Object:    objj,
+		Name:      dep.GetName(),
+		Namespace: dep.GetNamespace(),
+		Kind:      "Deployment",
+		EventType: workqueue.DeleteEvent,
+	}
+	d.Push(rr)
 
 	return
 }
@@ -75,10 +92,12 @@ func (d DeploymentHandler) OnDelete(obj interface{}) {
 var _ cache.ResourceEventHandler = &DeploymentHandler{}
 
 type PodHandler struct {
+	// Queue 工作队列接口
+	workqueue.Queue
 }
 
-func NewPodHandler() *PodHandler {
-	return &PodHandler{}
+func NewPodHandler(q workqueue.Queue) *PodHandler {
+	return &PodHandler{Queue: q}
 }
 
 func (p PodHandler) OnAdd(obj interface{}) {
@@ -92,16 +111,18 @@ func (p PodHandler) OnUpdate(oldObj, newObj interface{}) {
 	if !ok {
 		return
 	}
-	// TODO: 使用初始化实例 可以解决目前的bug
-	// 发送邮件
-	s := NewSender()
-	err := s.Send(fmt.Sprintf("pod is updated: %s", pod.GetName()),
-		fmt.Sprintf("pod is updated: %s", pod.GetName()))
-	if err != nil {
-		klog.Error("send pod update error: ", err)
+	obj, ok := newObj.(runtime.Object)
+	if !ok {
 		return
 	}
-	klog.Info("send pod update success...")
+	rr := &workqueue.QueueResource{
+		Object:    obj,
+		Name:      pod.GetName(),
+		Namespace: pod.GetNamespace(),
+		Kind:      "Pod",
+		EventType: workqueue.UpdateEvent,
+	}
+	p.Push(rr)
 	return
 }
 
@@ -113,15 +134,18 @@ func (p PodHandler) OnDelete(obj interface{}) {
 		return
 	}
 	// TODO: 使用初始化实例 可以解决目前的bug
-	// 发送邮件
-	s := NewSender()
-	err := s.Send(fmt.Sprintf("pod is deleted: %s", pod.GetName()),
-		fmt.Sprintf("pod is deleted: %s", pod.GetName()))
-	if err != nil {
-		klog.Error("send pod delete error: ", err)
+	objj, ok := obj.(runtime.Object)
+	if !ok {
 		return
 	}
-	klog.Info("send pod delete success...")
+	rr := &workqueue.QueueResource{
+		Object:    objj,
+		Name:      pod.GetName(),
+		Namespace: pod.GetNamespace(),
+		Kind:      "Pod",
+		EventType: workqueue.DeleteEvent,
+	}
+	p.Push(rr)
 
 	return
 }
@@ -129,10 +153,12 @@ func (p PodHandler) OnDelete(obj interface{}) {
 var _ cache.ResourceEventHandler = &PodHandler{}
 
 type ServiceHandler struct {
+	// Queue 工作队列接口
+	workqueue.Queue
 }
 
-func NewServiceHandler() *ServiceHandler {
-	return &ServiceHandler{}
+func NewServiceHandler(q workqueue.Queue) *ServiceHandler {
+	return &ServiceHandler{Queue: q}
 }
 
 func (s ServiceHandler) OnAdd(obj interface{}) {
@@ -147,15 +173,18 @@ func (s ServiceHandler) OnUpdate(oldObj, newObj interface{}) {
 		return
 	}
 	// TODO: 使用初始化实例 可以解决目前的bug
-	// 发送邮件
-	ss := NewSender()
-	err := ss.Send(fmt.Sprintf("service is updated: %s", svc.GetName()),
-		fmt.Sprintf("service is updated: %s", svc.GetName()))
-	if err != nil {
-		klog.Error("send service update error: ", err)
+	obj, ok := newObj.(runtime.Object)
+	if !ok {
 		return
 	}
-	klog.Info("send service update success...")
+	rr := &workqueue.QueueResource{
+		Object:    obj,
+		Name:      svc.GetName(),
+		Namespace: svc.GetNamespace(),
+		Kind:      "Service",
+		EventType: workqueue.UpdateEvent,
+	}
+	s.Push(rr)
 
 	return
 }
@@ -168,15 +197,19 @@ func (s ServiceHandler) OnDelete(obj interface{}) {
 		return
 	}
 	// TODO: 使用初始化实例 可以解决目前的bug
-	// 发送邮件
-	ss := NewSender()
-	err := ss.Send(fmt.Sprintf("service is deleted: %s", svc.GetName()),
-		fmt.Sprintf("service is deleted: %s", svc.GetName()))
-	if err != nil {
-		klog.Error("send service delete error: ", err)
+	// TODO: 使用初始化实例 可以解决目前的bug
+	objj, ok := obj.(runtime.Object)
+	if !ok {
 		return
 	}
-	klog.Info("send service delete success...")
+	rr := &workqueue.QueueResource{
+		Object:    objj,
+		Name:      svc.GetName(),
+		Namespace: svc.GetNamespace(),
+		Kind:      "Service",
+		EventType: workqueue.DeleteEvent,
+	}
+	s.Push(rr)
 
 	return
 }

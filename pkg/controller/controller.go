@@ -56,8 +56,8 @@ func (r *MessageController) Reconcile(ctx context.Context, req reconcile.Request
 		klog.Error("appconfig error: ", err)
 		return reconcile.Result{}, err
 	}
-
-	klog.Info("CreateOrUpdate ", "Message ", mutateMessageRes)
+	_ = mutateMessageRes
+	//klog.Info("CreateOrUpdate ", "Message ", mutateMessageRes)
 	return reconcile.Result{}, nil
 }
 

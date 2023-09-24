@@ -11,7 +11,6 @@ import (
 	//"k8s.io/client-go/tools/record"
 	_ "k8s.io/code-generator"
 	"k8s.io/klog/v2"
-	"log"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -65,6 +64,7 @@ func main() {
 		klog.Error("unable to load sysconfig error: ", err)
 		os.Exit(1)
 	}
+
 	errC := make(chan error)
 
 	// 5. 启动controller管理器
@@ -81,11 +81,10 @@ func main() {
 		if err = httpserver.HttpServer(); err != nil {
 			errC <- err
 		}
-
 	}()
 
-	// 这里会阻塞，两种常驻进程可以使用这个方法
+	// 阻塞
 	getError := <-errC
-	log.Println(getError.Error())
+	klog.Error(getError.Error())
 
 }
