@@ -14,22 +14,33 @@ type Message struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec MessageSpec `json:"spec,omitempty"`
+
+	Status MessageStatus `json:"status,omitempty"`
 }
 
-
-
 type MessageSpec struct {
-	Sender  Sender   `json:"sender"`
+	Sender Sender `json:"sender"`
+	Feishu Feishu `json:"feishu"`
+}
+
+type MessageStatus struct {
+	Generation int64 `json:"generation"`
 }
 
 type Sender struct {
-	remote   string	 `json:"remote"`
-	port     int     `json:"port"`
-	email    string  `json:"email"`
-	password string  `json:"password"`
-	targets  string  `json:"targets"`
+	Open     bool   `json:"open"`
+	Remote   string `json:"remote"`
+	Port     int    `json:"port"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Targets  string `json:"targets"`
 }
 
+type Feishu struct {
+	Open    bool   `json:"open"`
+	Webhook string `json:"webhook"`
+	Type    string `json:"type"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -41,5 +52,3 @@ type MessageList struct {
 
 	Items []Message `json:"items"`
 }
-
-
