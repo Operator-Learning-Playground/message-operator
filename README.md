@@ -18,14 +18,21 @@ metadata:
   name: mymessage
 spec:
   sender:
-    open: true
+    open: true      # 是否开启发送功能
+                    # email 配置
     remote: smtp.qq.com
     port:  25
     email: 2539512760@qq.com
     password: xxxxx
     targets: 3467320690@qq.com
   feishu:
-    open: true
+    open: true       # 是否开启发送功能
     webhook: xxxxxx  # 飞书 webhook ip
-    type: card   # 支持 text card 推送模式
+    type: card       # 预计支持 text card 推送模式
 ```
+
+- 发送结果如下
+![](https://github.com/googs1025/message-operator/blob/main/image/img.png?raw=true)
+
+![](https://github.com/googs1025/message-operator/blob/main/image/img_1.png?raw=true)
+

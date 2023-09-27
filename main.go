@@ -53,11 +53,9 @@ func main() {
 	k8sConfig.InitInformerFactory()
 
 	// 3. 控制器相关
-	messageCtl := controller.NewMessageController(mgr.GetEventRecorderFor("message-operator"))
+	messageCtl := controller.NewMessageController(mgr.GetEventRecorderFor("message-operator"), mgr.GetLogger())
 
-	err = builder.ControllerManagedBy(mgr).
-		For(&messagev1alpha1.Message{}).
-		Complete(messageCtl)
+	err = builder.ControllerManagedBy(mgr).For(&messagev1alpha1.Message{}).Complete(messageCtl)
 
 	// 4. 载入业务配置
 	if err = sysconfig.InitConfig(); err != nil {
@@ -67,7 +65,7 @@ func main() {
 
 	errC := make(chan error)
 
-	// 5. 启动controller管理器
+	// 5. 启动 controller 管理器
 	go func() {
 		klog.Info("controller start!! ")
 		if err = mgr.Start(signals.SetupSignalHandler()); err != nil {

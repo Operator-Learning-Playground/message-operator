@@ -4,14 +4,14 @@ metadata:
   name: mymessage
 spec:
   sender:
-    open: true
+    open: true        # 是否开启发送功能
     remote: smtp.qq.com
     port:  25
     email: 2539512760@qq.com
     password: cswkxalurhtwecge
     targets: 3467320690@qq.com
   feishu:
-    open: true
+    open: true       # 是否开启发送功能
     webhook: xxxxxx  # 飞书 webhook ip
-    type: card   # 支持 text card 推送模式
+    type: card       # 支持 text card 推送模式
 

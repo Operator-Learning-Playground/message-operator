@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	webhookURL := "https://open.feishu.cn/open-apis/bot/v2/hook/919c368d-bbbf-4858-b788-0b78a4389d45" // 替换为您的飞书机器人 Webhook URL
+	webhookURL := "https://open.feishu.cn/open-apis/bot/v2/hook/xxx" // 替换为您的飞书机器人 Webhook URL
 
 	// 构建卡片消息内容
 	cardMessage := map[string]interface{}{
